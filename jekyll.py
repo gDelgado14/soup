@@ -69,9 +69,9 @@ def post_create(post):
         # parse Forty-Eight and About page to root directory
         else:
 
-            file_name = unidecode(post['title']) + '.html'
+            title = unidecode(post['title']).replace("-", " ")
 
-            title = file_name.replace("-", " ")
+            file_name = title.replace(" ", "-") + '.html'
 
             f = open('root/' + file_name, 'w')
 

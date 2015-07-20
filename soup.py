@@ -39,6 +39,7 @@ import string, os, sys, getopt
 from xml.dom import minidom
 from jekyll import post_create
 import urllib
+from unidecode import unidecode
 
 dom = minidom.parse("wordpress.xml")
 
@@ -72,10 +73,10 @@ for node in dom.getElementsByTagName('item'):
         blog.append(post)
 
     elif node.getElementsByTagName('wp:attachment_url'):
-        img_url = node.getElementsByTagName('wp:attachment_url')[0].firstChild.data
+        img_url = unidecode(node.getElementsByTagName('wp:attachment_url')[0].firstChild.data)
         file_name = img_url[img_url.rfind("/") + 1:]
-        dir = 'downloads/'
-        urllib.urlretrieve(img_url, dir + file_name)
+        img_dir = 'root/downloads/'
+        urllib.urlretrieve(img_url, img_dir + file_name)
 
 for page in blog:
     post_create(page)
