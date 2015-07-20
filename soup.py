@@ -38,6 +38,7 @@ for item in items:
 import string, os, sys, getopt
 from xml.dom import minidom
 from jekyll import post_create
+import urllib
 
 dom = minidom.parse("wordpress.xml")
 
@@ -46,15 +47,13 @@ blog = []  # list that will contain all posts
 for node in dom.getElementsByTagName('item'):
     post = dict()
 
-    #print node
-
     # only work on posts:
     # for something to be a post it must have a <title> attr
     # as well as a <content:encoded> attr
     # everything else is metadata
 
     if node.getElementsByTagName('title')[0].firstChild is not None and \
-    node.getElementsByTagName('content:encoded')[0].firstChild is not None:
+            node.getElementsByTagName('content:encoded')[0].firstChild is not None:
 
         post["title"] = node.getElementsByTagName('title')[0].firstChild.data
         post["date"] = node.getElementsByTagName('pubDate')[0].firstChild.data
@@ -72,16 +71,14 @@ for node in dom.getElementsByTagName('item'):
         # Add post to the list of all posts
         blog.append(post)
 
-    # find image links and save to 'downloads' directory
-    elif node.getElementsByTagName('wp:attachment_url')[0].firstChild is not None:
+    elif node.getElementsByTagName('wp:attachment_url'):
+        img_url = node.getElementsByTagName('wp:attachment_url')[0].firstChild.data
+        file_name = img_url[img_url.rfind("/") + 1:]
+        dir = 'downloads/'
+        urllib.urlretrieve(img_url, dir + file_name)
 
 for page in blog:
-
     post_create(page)
-
-    #print page
-
-    #print str(page['text'])
 
 
 

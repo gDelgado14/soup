@@ -4,11 +4,9 @@
 from unidecode import unidecode
 
 def post_create(post):
-
     """
-    Creates Jekyll compatible HTML file!
+    Creates Jekyll compatible HTML files!
     """
-
 
     # used to convert wordpress date format into Jekyll date format
     date_ref = {
@@ -25,7 +23,6 @@ def post_create(post):
     'Nov': '11',
     'Dec': '12',
     }
-
 
     post_front_matter = """---\nlayout: [the_layout]\ntitle: [the_title]\n---"""
 
@@ -57,9 +54,9 @@ def post_create(post):
 
             post_front_matter = post_front_matter.replace("[the_layout]", "post").replace("[the_title]", title)
 
-            if post['catogories']:
+            if post['categories']:
                 post_front_matter = post_front_matter[:-3] + 'tags: '
-                for cat in posts['categories']:
+                for cat in post['categories']:
                     post_front_matter += cat + ' '
                 post_front_matter += '\n---'
 
@@ -69,8 +66,26 @@ def post_create(post):
 
             f.close()
 
+        # parse Forty-Eight and About page to root directory
+        else:
 
-        #elif page['title'] == u"About":
+            file_name = unidecode(post['title']) + '.html'
+
+            title = file_name.replace("-", " ")
+
+            f = open('root/' + file_name, 'w')
+
+            post_front_matter = post_front_matter.replace("[the_layout]", "page").replace("[the_title]", title) + '\n'
+
+            f.write(post_front_matter + unidecode(post['text']))
+
+            f.close()
+
+
+
+
+
+
 
 
 
