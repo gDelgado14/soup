@@ -1,1 +1,7 @@
+# xml file is massive and may contain sensative info
 *.xml
+
+# you'll see my content anyways on my blog
+*.html
+
+*.pyc

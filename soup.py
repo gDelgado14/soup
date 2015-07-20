@@ -39,27 +39,6 @@ import string, os, sys, getopt
 from xml.dom import minidom
 from jekyll import post_create
 
-
-# used to convert wordpress date format
-# into Jekyll date format
-
-date_ref = {
-    'Jan': '1',
-    'Feb': '2',
-    'Mar': '3',
-    'Apr': '4',
-    'May': '5',
-    'Jun': '6',
-    'Jul': '7',
-    'Aug': '8',
-    'Sep': '9',
-    'Oct': '10',
-    'Nov': '11',
-    'Dec': '12',
-}
-
-
-
 dom = minidom.parse("wordpress.xml")
 
 blog = []  # list that will contain all posts
@@ -67,7 +46,7 @@ blog = []  # list that will contain all posts
 for node in dom.getElementsByTagName('item'):
     post = dict()
 
-    print node
+    #print node
 
     # only work on posts:
     # for something to be a post it must have a <title> attr
@@ -83,8 +62,6 @@ for node in dom.getElementsByTagName('item'):
         post["id"] = node.getElementsByTagName('wp:post_id')[0].firstChild.data
         post["text"] = node.getElementsByTagName('content:encoded')[0].firstChild.data
 
-        # wp:attachment_url could be use to download attachments
-
         # Get the categories
         tempCategories = []
         for subnode in node.getElementsByTagName('category'):
@@ -95,18 +72,16 @@ for node in dom.getElementsByTagName('item'):
         # Add post to the list of all posts
         blog.append(post)
 
-
-
-
+    # find image links and save to 'downloads' directory
+    elif node.getElementsByTagName('wp:attachment_url')[0].firstChild is not None:
 
 for page in blog:
 
+    post_create(page)
 
+    #print page
 
-        post_create(page)
-
-    else:
-
+    #print str(page['text'])
 
 
 
